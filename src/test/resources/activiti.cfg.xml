@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/contex http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 这个配置是activiti单独运行时的配置文件 -->
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"
+			value="com.mysql.cj.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/db_workflow?useUnicode=true&amp;characterEncoding=utf-8&amp;usessl=false&amp;serverTimezone=UTC" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="1"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="10"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="10"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="2"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="10000"></property>
+	</bean>
+
+	<!--activiti单独运行的ProcessEngine配置对象(processEngineConfiguration),使用单独启动方式 
+		默认情况下：bean的id=processEngineConfiguration -->
+	<bean id="processEngineConfiguration"
+		class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+		<!--代表数据源 -->
+		<property name="dataSource" ref="dataSource" />
+		<!--代表是否生成表结构 -->
+		<property name="databaseSchemaUpdate" value="true" />
+	</bean>
+
+	<!--构造流程引擎对象 ，单独使用activiti时不需要这个bean -->
+	<!-- <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean"> 
+		指定流程引擎配置对象 <property name="processEngineConfiguration" ref="processEngineConfiguration" 
+		/> </bean> -->
+
+
+
+	<!-- 创建activiti提供的各种服务接口 -->
+	<!-- 工作流仓库服务 -->
+	<bean id="repositoryService" factory-bean="processEngine"
+		factory-method="getRepositoryService" />
+	<!-- 工作流运行时服务 -->
+	<bean id="runtimeService" factory-bean="processEngine"
+		factory-method="getRuntimeService" />
+	<!-- 工作流任务服务 -->
+	<bean id="taskService" factory-bean="processEngine"
+		factory-method="getTaskService" />
+	<!-- 工作流历史数据服务 -->
+	<bean id="historyService" factory-bean="processEngine"
+		factory-method="getHistoryService" />
+	<!-- 工作流管理服务 -->
+	<bean id="managementService" factory-bean="processEngine"
+		factory-method="getManagementService" />
+	<!-- 工作流用户服务 -->
+	<bean id="identityService" factory-bean="processEngine"
+		factory-method="getIdentityService" />
+	<!-- 表单服务 -->
+	<bean id="formService" factory-bean="processEngine"
+		factory-method="getFormService" />
+	<!-- -->
+	<bean id="dynamicBpmnService" factory-bean="processEngine"
+		factory-method="getDynamicBpmnService" />
+
+	<!--配置测试 Rule -->
+	<bean id="activitiRule"
+		class="org.activiti.engine.test.ActivitiRule">
+		<property name="processEngine" ref="processEngine" />
+	</bean>
+
+
+</beans>

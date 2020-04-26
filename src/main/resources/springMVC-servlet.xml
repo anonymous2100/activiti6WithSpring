@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" 
+                http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans.xsd 
+                http://www.springframework.org/schema/context 
+                http://www.springframework.org/schema/context/spring-context.xsd 
+                http://www.springframework.org/schema/mvc 
+                http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 当使用<context:component-scan/>后，即可将<context:annotation-config/>省去。 -->
+	<!-- 启用spring mvc 注解 -->
+	<context:annotation-config />
+
+	<!-- 设置使用注解的类所在的jar包 -->
+	<context:component-scan base-package="com.ctgu" />
+
+
+	<!-- 提供Controller请求转发，json自动转换等功能 -->
+	<mvc:annotation-driven>
+		<!-- 消息转换器，配置字符集解决乱码问题 -->
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 视图解析器：对跳转页面的路径解析。prefix：前缀， suffix：后缀 ,使用jsp作为视图 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀 -->
+		<property name="prefix">
+			<value>/WEB-INF/views/</value>
+		</property>
+		<!-- 后缀 -->
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<!--使用默认的Servlet来响应静态文件 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 对response到页面的数据进行编码设置则需要自定义注解数据格式化类来对页面传过来的字符串进行格式化。 -->
+	<!-- <mvc:annotation-driven />相当于注册了DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter两个bean。 
+		在上面配置的AnnotationMethodHandlerAdapter在<mvc:annotation-driven />后是不起作用的。 <mvc:annotation-driven 
+		/>包括了一个默认的AnnotationMethodHandlerAdapter功能。 -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> 
+		<property name="messageConverters"> <list> <bean class="org.springframework.http.converter.StringHttpMessageConverter"> 
+		<property name="supportedMediaTypes"> <list> <value>text/plain;charset=UTF-8</value> 
+		</list> </property> </bean> </list> </property> </bean> -->
+
+
+
+</beans>
