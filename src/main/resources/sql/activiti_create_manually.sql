@@ -1,4 +1,4 @@
--- MySQL数据库activiti6手动【建】表语句
+-- MySQL数据库activiti6.0.0手动【建】表语句
 -- 
 -- 
 -- 

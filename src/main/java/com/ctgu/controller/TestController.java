@@ -14,7 +14,7 @@ import com.ctgu.entity.User;
 
 /**
  * @ClassName: TestController
- * @Description: 测试spring mvc
+ * @Description: 测试接口 ，没什么意义
  * @author lh2
  * @date 2020年4月24日 下午5:54:06
  */
